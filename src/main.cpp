@@ -4,28 +4,14 @@
 #include <fstream>
 #include <sstream>
 
+#include "jogador_struct.h"
+#include "user_struct.h"
+#include "sortings.h"
+
 #define TAM 7993
-#define TAM_TB_USER 10007 //19999979
+#define TAM_TB_USER  24999989 //10007
 
 using namespace std;
-
-typedef struct {
-    int id;
-    string short_name;
-    string long_name;
-    string posicoes;
-    string nacionalidade;
-    string clube;
-    string liga;
-    float soma_ratings = 0.0;
-    float count_ratings = 0.0;
-}JOGADOR;
-
-typedef struct {
-    int id;
-    vector<int> jogadores_avaliados;
-    vector<float> notas;
-}USER;
 
 int funcaoHash(int chave, vector<vector<JOGADOR>> &tb)
 {
@@ -217,6 +203,40 @@ USER busca_user(vector<vector<USER>> &tb_user, int chave) {
     }
 
     return user_nulo;
+}
+
+void jogadores_revisados(vector<vector<USER>> &tb_user, vector<vector<JOGADOR>> &tb, int id) {
+    USER usuario;
+    vector<JOGADOR> lista_jogadores;
+
+    usuario = busca_user(tb_user, id);
+
+    int tam = (int)usuario.jogadores_avaliados.size();
+    vector<int> id_jogador(tam,0);
+    vector<float> nota_user(tam,0.0);
+    vector<float> nota_global(tam,0.0);
+
+    //poe todos os jogadores revisados pelo usuario em uma lista
+    for(int i = 0; i < tam; i++) {
+            JOGADOR jog;
+
+            jog = busca(tb, usuario.jogadores_avaliados[i]);
+            id_jogador[i] = jog.id;
+            nota_user[i] = usuario.notas[i];
+            nota_global[i] = jog.soma_ratings / jog.count_ratings;
+    }
+        
+    //ordena, considerando nota global e nota dada pelo usuario
+    insertionSort(id_jogador, nota_global, nota_user);
+
+    cout << "id_jogador " << "short_name " << "long_name " << "nota_global count nota_user" << endl;
+
+    for(int i = 0; i < 20; i++) {
+        JOGADOR jog2 = busca(tb, id_jogador[i]);
+
+        cout << id_jogador[i] << " " << jog2.short_name << " " << jog2.long_name << " " <<
+         nota_global[i] << " " << jog2.count_ratings << " " << nota_user[i] << endl;
+     }
 }
 
 int main()
