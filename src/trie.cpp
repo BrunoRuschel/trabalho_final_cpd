@@ -1,6 +1,7 @@
 #include "trie.h"
 
-TrieNode* createNode(TrieNode* root, char value, TrieNode *left, TrieNode *middle, TrieNode *right, int id) {
+TrieNode* createNode(char value, TrieNode *left, TrieNode *middle, TrieNode *right, int id) {
+    auto* root = (TrieNode*) malloc(sizeof(TrieNode));
     root->value = value;
     root->left = left;
     root->right = right;
@@ -23,20 +24,21 @@ TrieNode* getNode(TrieNode *treeRoot, const std::string &key, int currentDigit) 
 
 TrieNode* putNode(TrieNode *treeRoot, const std::string &key, int currentDigit, int id) {
     char c = key[currentDigit];
-    if(!treeRoot) {
-        TrieNode* newNode;
-        treeRoot = createNode(newNode, c, nullptr, nullptr, nullptr, -1);
+    TrieNode* nonNullableRoot = treeRoot;
+    if (!treeRoot) {
+        nonNullableRoot = createNode(c, nullptr, nullptr, nullptr, -1);
     }
-    if(c < treeRoot->value) {
-        treeRoot->left = putNode(treeRoot->left, key, currentDigit, id);
-    } else if (c > treeRoot->value) {
-        treeRoot->right = putNode(treeRoot->right, key, currentDigit, id);
+
+    if(c < nonNullableRoot->value) {
+        nonNullableRoot->left = putNode(nonNullableRoot->left, key, currentDigit, id);
+    } else if (c > nonNullableRoot->value) {
+        nonNullableRoot->right = putNode(nonNullableRoot->right, key, currentDigit, id);
     } else if (currentDigit < key.length() - 1) {
-        treeRoot->middle = putNode(treeRoot->middle, key, ++currentDigit, id);
+        nonNullableRoot->middle = putNode(nonNullableRoot->middle, key, ++currentDigit, id);
     } else {
-        treeRoot->id = id;
+        nonNullableRoot->id = id;
     }
-    return treeRoot;
+    return nonNullableRoot;
 };
 
 void getAllMatchingIDs(TrieNode* treeRoot, const std::string &key, std::vector<int> idList) {

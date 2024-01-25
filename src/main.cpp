@@ -4,8 +4,12 @@
 #include <fstream>
 #include <sstream>
 
+#include "tagsTable.h"
+#include "trie.h"
+
 #define TAM 7993
 #define TAM_TB_USER 10007 //19999979
+#define TAM_TB_TAGS 7993
 
 using namespace std;
 
@@ -69,8 +73,44 @@ void insere(vector<vector<JOGADOR>> &tb, JOGADOR jogador)
     tb[id].push_back(jogador);
 }
 
+void loadTags(vector<vector<int>> &table, const string &filePath) {
+    vector<Tag> tagArray;
+    ifstream arquivo(filePath);
 
-void lerArquivo_fillTabela(vector<vector<JOGADOR>> &tb, const string &nomeArquivo) {
+    if (arquivo.is_open()) {
+        string linha;
+
+        // Skip the header line
+        getline(arquivo, linha);
+
+        while (getline(arquivo, linha)) {
+            stringstream ss(linha);
+            string user_id;
+            string player_id;
+            string tag;
+
+            Tag currentTag;
+
+            // Skip user id (unused in queries)
+            getline(ss, user_id, ',');
+
+            getline(ss, player_id, ',');
+            currentTag.player_id = stoi(player_id);
+
+            // le nome longo
+            getline(ss, tag, ',');
+            currentTag.text = tag;
+
+            insert_tag(table, currentTag);
+        }
+
+        arquivo.close();
+    } else {
+        cout << "Erro ao abrir o arquivo " << filePath << endl;
+    }
+}
+
+void lerArquivo_fillTabela(vector<vector<JOGADOR>> &tb, TrieNode* stringTree, const string &nomeArquivo) {
     vector<JOGADOR> jogadores;
     ifstream arquivo(nomeArquivo);
 
@@ -98,6 +138,8 @@ void lerArquivo_fillTabela(vector<vector<JOGADOR>> &tb, const string &nomeArquiv
             // le nome longo
             getline(ss, token, ',');
             jogador.long_name = token;
+
+            putNode(stringTree, token, 0, jogador.id);
 
             // le a posicao
             getline(ss, token, ',');
@@ -223,9 +265,13 @@ int main()
 {
     vector<vector<JOGADOR>> tb(TAM, vector<JOGADOR>());
     vector<vector<USER>> tb_user(TAM_TB_USER, vector<USER>());
+    vector<vector<int>> tb_tags(TAM_TB_TAGS, vector<int>());
+    TrieNode* tst = createNode(' ', nullptr, nullptr, nullptr, -1);
 
-    lerArquivo_fillTabela(tb, "../data-files/players.csv");
+
+    lerArquivo_fillTabela(tb, tst, "../data-files/players.csv");
     preenche_ratings(tb, "../data-files/minirating.csv", tb_user);
+    loadTags(tb_tags, "../data-files/tags.csv");
 
     //JOGADOR jog;
     //USER user;

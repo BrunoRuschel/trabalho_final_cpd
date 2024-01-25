@@ -5,8 +5,9 @@
 #include <vector>
 #include "trieNode.h"
 
-TrieNode createNode(char value, TrieNode *left, TrieNode *middle, TrieNode *right);
+TrieNode* createNode(char value, TrieNode *left, TrieNode *middle, TrieNode *right, int id);
 TrieNode* getNode(TrieNode *treeRoot, const std::string &key, int currentDigit);
+TrieNode* putNode(TrieNode *treeRoot, const std::string &key, int currentDigit, int id);
 void getAllWordsFromRoot(TrieNode* treeRoot, std::vector<int> idList);
 void getAllMatchingIDs(TrieNode* treeRoot, const std::string &key, std::vector<int> idList);
 
