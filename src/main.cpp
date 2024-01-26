@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 #include "tagsTable.h"
 #include "trie.h"
@@ -268,7 +269,7 @@ void jogadores_revisados(vector<vector<USER>> &tb_user, vector<vector<JOGADOR>> 
     }
 
     //ordena, considerando nota global e nota dada pelo usuario
-    insertionSort(id_jogador, nota_global, nota_user);
+    insertionSort_triple(id_jogador, nota_global, nota_user);
 
     cout << "id_jogador " << "short_name " << "long_name " << "nota_global count nota_user" << endl;
 
@@ -278,6 +279,70 @@ void jogadores_revisados(vector<vector<USER>> &tb_user, vector<vector<JOGADOR>> 
         cout << id_jogador[i] << " " << jog2.short_name << " " << jog2.long_name << " " <<
          nota_global[i] << " " << jog2.count_ratings << " " << nota_user[i] << endl;
      }
+}
+
+void melhores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n) {
+    vector<JOGADOR> jogadores;
+    string pos;
+    bool achou = false;
+    transform(posicao.begin(), posicao.end(), posicao.begin(), ::toupper);
+
+    for (const vector<JOGADOR> &bucket : tb) {
+        for (const JOGADOR &jog : bucket) {
+            //checa se o jogador eh da posicao
+            if ((jog.posicoes.find(posicao) != string::npos) && jog.count_ratings >= 1000) {
+                jogadores.push_back(jog);
+                achou = true;
+            }
+        }
+    }
+
+    //ordena
+    insertionSort_dec(jogadores);
+
+    if(achou){
+        cout << "Melhores jogadores da posicao " << posicao << ":" << endl;
+        for (int i = 0; i < n; i++) {
+        cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
+        << jogadores[i].liga << " " << 
+         jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
+        }
+    }
+    else {
+        cout << "nenhum jogador encontrado com a posicao " << posicao << endl;
+    }
+}
+
+void piores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n) {
+    vector<JOGADOR> jogadores;
+    string pos;
+    bool achou = false;
+    transform(posicao.begin(), posicao.end(), posicao.begin(), ::toupper);
+
+    for (const vector<JOGADOR> &bucket : tb) {
+        for (const JOGADOR &jog : bucket) {
+            //checa se o jogador eh da posicao
+            if ((jog.posicoes.find(posicao) != string::npos) && jog.count_ratings >= 1000) {
+                jogadores.push_back(jog);
+                achou = true;
+            }
+        }
+    }
+
+    //ordena
+    insertionSort_cresc(jogadores);
+
+    if(achou){
+        cout << "Piores jogadores da posicao " << posicao << ":" << endl;
+        for (int i = 0; i < n; i++) {
+        cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
+        << jogadores[i].liga << " " << 
+         jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
+        }
+    }
+    else {
+        cout << "nenhum jogador encontrado com a posicao " << posicao << endl;
+    }
 }
 
 int main()
