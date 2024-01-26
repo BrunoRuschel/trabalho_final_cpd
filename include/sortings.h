@@ -6,7 +6,7 @@ using namespace std;
 #ifndef SORTINGS_H_INCLUDED
 #define SORTINGS_H_INCLUDED
 
-void insertionSort(std::vector<int>& id_jogador, std::vector<float>& nota_global, std::vector<float>& nota_user) {
+void insertionSort_triple(std::vector<int>& id_jogador, std::vector<float>& nota_global, std::vector<float>& nota_user) {
     int n = id_jogador.size();
 
     for (int i = 1; i < n; ++i) {
@@ -27,6 +27,40 @@ void insertionSort(std::vector<int>& id_jogador, std::vector<float>& nota_global
         id_jogador[j + 1] = current_id;
         nota_global[j + 1] = current_nota_global;
         nota_user[j + 1] = current_nota_user;
+    }
+}
+
+void insertionSort_dec(vector<JOGADOR> &players) {
+    int n = players.size();
+
+    for (int i = 1; i < n; i++) {
+        JOGADOR key = players[i];
+        int j = i - 1;
+
+        // Move elements of players[0..i-1] that are greater than key
+        // to one position ahead of their current position
+        while (j >= 0 && (players[j].soma_ratings / players[j].count_ratings) < (key.soma_ratings / key.count_ratings)) {
+            players[j + 1] = players[j];
+            j = j - 1;
+        }
+        players[j + 1] = key;
+    }
+}
+
+void insertionSort_cresc(vector<JOGADOR> &players) {
+    int n = players.size();
+
+    for (int i = 1; i < n; i++) {
+        JOGADOR key = players[i];
+        int j = i - 1;
+
+        // Move elements of players[0..i-1] that are greater than key
+        // to one position ahead of their current position
+        while (j >= 0 && (players[j].soma_ratings / players[j].count_ratings) > (key.soma_ratings / key.count_ratings)) {
+            players[j + 1] = players[j];
+            j = j - 1;
+        }
+        players[j + 1] = key;
     }
 }
 
