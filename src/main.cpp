@@ -346,6 +346,14 @@ void piores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n)
     }
 }
 
+void handlePlayerQuery(TrieNode* treeRoot, const string& query) {
+    vector<int> idList;
+    if(!query.empty()) {
+        getAllMatchingIDs(treeRoot, query, idList);
+    }
+    //Com a lista de IDS, buscar jogadores em outras estruturas.
+}
+
 int main()
 {
     vector<vector<JOGADOR>> tb(TAM, vector<JOGADOR>());
@@ -357,6 +365,28 @@ int main()
     lerArquivo_fillTabela(tb, players_tst, "../data-files/players.csv");
     preenche_ratings(tb, "../data-files/minirating.csv", tb_user);
     TagsTrieNode* tags_tst = loadTags("../data-files/tags.csv");
+
+    cout << "Aperte CTRL + C para interromper a execução" << endl;
+
+    string command;
+    while (getline(std::cin, command) && !command.empty()) {
+        istringstream iss(command);
+        vector<string> words;
+
+        // Read each word from the stringstream
+        string word;
+        while (iss >> word) {
+            words.push_back(word);
+        }
+
+        if(!words.empty()) {
+            if(words[0] == "player") {
+                auto query = words[1];
+                transform(query.begin(), query.end(), query.begin(), ::toupper);
+                handlePlayerQuery(players_tst, query);
+            }
+        }
+    }
 
     //JOGADOR jog;
     //USER user;
