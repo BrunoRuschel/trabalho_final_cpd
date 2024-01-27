@@ -5,15 +5,14 @@
 #include <sstream>
 #include <algorithm>
 
-#include "tagsTable.h"
 #include "trie.h"
 #include "jogador_struct.h"
 #include "user_struct.h"
 #include "sortings.h"
+#include "tagsTrie.h"
 
 #define TAM 7993
 #define TAM_TB_USER  24999989 //10007
-#define TAM_TB_TAGS 7993
 
 using namespace std;
 
@@ -59,9 +58,10 @@ void insere(vector<vector<JOGADOR>> &tb, JOGADOR jogador)
     tb[id].push_back(jogador);
 }
 
-void loadTags(vector<vector<int>> &table, const string &filePath) {
-    vector<Tag> tagArray;
+TagsTrieNode * loadTags(const string &filePath) {
     ifstream arquivo(filePath);
+
+    auto* tst = new TagsTrieNode;
 
     if (arquivo.is_open()) {
         string linha;
@@ -75,24 +75,24 @@ void loadTags(vector<vector<int>> &table, const string &filePath) {
             string player_id;
             string tag;
 
-            Tag currentTag;
-
             // Skip user id (unused in queries)
             getline(ss, user_id, ',');
 
             getline(ss, player_id, ',');
-            currentTag.player_id = stoi(player_id);
-
-            // le nome longo
             getline(ss, tag, ',');
-            currentTag.text = tag;
 
-            insert_tag(table, currentTag);
+            if(!tag.empty() && !player_id.empty()) {
+                //Uppercase tag
+                transform(tag.begin(), tag.end(), tag.begin(), ::toupper);
+                putNodeTags(tst, tag, 0, stoi(player_id));
+            }
         }
 
         arquivo.close();
+        return tst;
     } else {
         cout << "Erro ao abrir o arquivo " << filePath << endl;
+        return nullptr;
     }
 }
 
@@ -125,6 +125,7 @@ void lerArquivo_fillTabela(vector<vector<JOGADOR>> &tb, TrieNode* stringTree, co
             getline(ss, token, ',');
             jogador.long_name = token;
 
+            transform(token.begin(), token.end(), token.begin(), ::toupper);
             putNode(stringTree, token, 0, jogador.id);
 
             // le a posicao
@@ -349,13 +350,13 @@ int main()
 {
     vector<vector<JOGADOR>> tb(TAM, vector<JOGADOR>());
     vector<vector<USER>> tb_user(TAM_TB_USER, vector<USER>());
-    vector<vector<int>> tb_tags(TAM_TB_TAGS, vector<int>());
-    TrieNode* tst = createNode(' ', nullptr, nullptr, nullptr, -1);
+    createNodeTags(' ', nullptr, nullptr, nullptr, -1);
+    TrieNode* players_tst = createNode(' ', nullptr, nullptr, nullptr, -1);
 
 
-    lerArquivo_fillTabela(tb, tst, "../data-files/players.csv");
+    lerArquivo_fillTabela(tb, players_tst, "../data-files/players.csv");
     preenche_ratings(tb, "../data-files/minirating.csv", tb_user);
-    loadTags(tb_tags, "../data-files/tags.csv");
+    TagsTrieNode* tags_tst = loadTags("../data-files/tags.csv");
 
     //JOGADOR jog;
     //USER user;

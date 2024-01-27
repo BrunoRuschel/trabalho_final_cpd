@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+
 #include "trieNode.h"
 
 TrieNode* createNode(char value, TrieNode *left, TrieNode *middle, TrieNode *right, int id);
