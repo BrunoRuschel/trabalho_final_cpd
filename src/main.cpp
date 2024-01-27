@@ -10,6 +10,7 @@
 #include "user_struct.h"
 #include "sortings.h"
 #include "tagsTrie.h"
+#include "printer.h"
 
 #define TAM 7993
 #define TAM_TB_USER  24999989 //10007
@@ -346,12 +347,21 @@ void piores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n)
     }
 }
 
-void handlePlayerQuery(TrieNode* treeRoot, const string& query) {
+void handlePlayerQuery(TrieNode* treeRoot, vector<vector<JOGADOR>> &table, const string& query) {
     vector<int> idList;
+    vector<JOGADOR> playerList;
     if(!query.empty()) {
         getAllMatchingIDs(treeRoot, query, idList);
     }
     //Com a lista de IDS, buscar jogadores em outras estruturas.
+    for(int id : idList) {
+        JOGADOR player = busca(table, id);
+        if(player.id == id) {
+            playerList.push_back(player);
+        }
+    }
+    insertionSort_dec(playerList);
+    printPlayerInfo(playerList);
 }
 
 int main()
@@ -383,7 +393,7 @@ int main()
             if(words[0] == "player") {
                 auto query = words[1];
                 transform(query.begin(), query.end(), query.begin(), ::toupper);
-                handlePlayerQuery(players_tst, query);
+                handlePlayerQuery(players_tst, tb, query);
             }
         }
     }
