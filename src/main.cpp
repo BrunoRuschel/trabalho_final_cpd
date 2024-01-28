@@ -364,6 +364,40 @@ void handlePlayerQuery(TrieNode* treeRoot, vector<vector<JOGADOR>> &table, const
     printPlayerInfo(playerList);
 }
 
+void handleTagQuery(const vector<string>& tags, TagsTrieNode* tags_tst, vector<vector<JOGADOR>> &table) {
+    vector<int> idList;
+    vector<int> tempIdList;
+    for(string tag : tags) {
+        tag.erase(std::remove(tag.begin(), tag.end(), '\''), tag.end());
+        transform(tag.begin(), tag.end(), tag.begin(), ::toupper);
+
+        getAllMatchingIDsTags(tags_tst, tag, tempIdList);
+        if(idList.empty()) {
+            idList.assign(tempIdList.begin(), tempIdList.end());
+        } else {
+            //Intersection of tags (could be improved with a search algo)
+            for (int i = 0; i < idList.size(); i++) {
+                bool found = false;
+                for (int j = 0; i < tempIdList.size(); j++) {
+                    if(idList[i] == tempIdList[j]) {
+                        found = true;
+                    }
+                }
+                if(!found) idList.erase(idList.begin()+i);
+            }
+        }
+    }
+    vector<JOGADOR> playerList;
+    for(int id : idList) {
+        JOGADOR player = busca(table, id);
+        if(player.id == id) {
+            playerList.push_back(player);
+        }
+    }
+    insertionSort_dec(playerList);
+    printPlayerInfo(playerList);
+}
+
 int main()
 {
     vector<vector<JOGADOR>> tb(TAM, vector<JOGADOR>());
@@ -394,6 +428,11 @@ int main()
                 auto query = words[1];
                 transform(query.begin(), query.end(), query.begin(), ::toupper);
                 handlePlayerQuery(players_tst, tb, query);
+            }
+
+            if(words[0] == "tags") {
+                words.erase(words.begin());
+                handleTagQuery(words, tags_tst, tb);
             }
         }
     }

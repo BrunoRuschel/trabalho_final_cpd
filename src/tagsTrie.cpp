@@ -36,24 +36,21 @@ TagsTrieNode* putNodeTags(TagsTrieNode *treeRoot, const std::string &key, int cu
     } else if (currentDigit < key.length() - 1) {
         nonNullableRoot->middle = putNodeTags(nonNullableRoot->middle, key, ++currentDigit, id);
     } else {
+        auto ids = nonNullableRoot->ids;
+        if(find(ids.begin(), ids.end(), id) != ids.end()){
+            return nonNullableRoot;
+        }
         nonNullableRoot->ids.push_back(id);
+
     }
     return nonNullableRoot;
 };
 
-void getAllMatchingIDsTags(TagsTrieNode* treeRoot, const string &key, vector<vector<int>> idList) {
+void getAllMatchingIDsTags(TagsTrieNode* treeRoot, const string &key, vector<int>& idList) {
     TagsTrieNode* firstNode = getNodeTags(treeRoot, key, 0);
     if(firstNode) {
-        getAllWordsFromRootTags(treeRoot, std::move(idList));
-    }
-}
-
-void getAllWordsFromRootTags(TagsTrieNode* treeRoot, vector<vector<int>> idList) {
-    TagsTrieNode* currentIteration = nullptr;
-    while(treeRoot && treeRoot->middle) {
-        currentIteration = treeRoot->middle;
-        if(!currentIteration->ids.empty()) {
-            idList.push_back(currentIteration->ids);
+        for(int id : firstNode->ids){
+            idList.push_back(id);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 auto ID_SIZE = 10;
 auto SHORT_NAME_SIZE = 20;
-auto LONG_NAME_SIZE = 40;
+auto LONG_NAME_SIZE = 55;
 auto POSITIONS_SIZE = 15;
 auto RATINGS_SIZE = 10;
 auto COUNT_SIZE = 10;
