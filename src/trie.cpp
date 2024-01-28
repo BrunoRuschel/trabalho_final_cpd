@@ -44,20 +44,22 @@ TrieNode* putNode(TrieNode *treeRoot, const std::string &key, int currentDigit, 
 void getAllMatchingIDs(TrieNode* treeRoot, const std::string &key, std::vector<int> &idList) {
     TrieNode* firstNode = getNode(treeRoot, key, 0);
     if(firstNode) {
-        getAllWordsFromRoot(firstNode, idList);
+        getAllWordsFromRoot(firstNode, idList, false);
     }
 }
 
-void getAllWordsFromRoot(TrieNode* treeRoot, std::vector<int> &idList) {
+void getAllWordsFromRoot(TrieNode* treeRoot, std::vector<int> &idList, bool includeFirst) {
     TrieNode* currentIteration = nullptr;
     if(treeRoot) {
         currentIteration = treeRoot->middle;
-        if(currentIteration && currentIteration->id > 0) {
+        if(currentIteration && currentIteration->id > 0 && includeFirst) {
             idList.push_back(currentIteration->id);
         }
-        getAllWordsFromRoot(currentIteration, idList);
-        getAllWordsFromRoot(treeRoot->left, idList);
-        getAllWordsFromRoot(treeRoot->right, idList);
+        getAllWordsFromRoot(currentIteration, idList, true);
+        if(includeFirst) {
+            getAllWordsFromRoot(treeRoot->left, idList, true);
+            getAllWordsFromRoot(treeRoot->right, idList, true);
+        }
     }
 }
 
