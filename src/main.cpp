@@ -306,7 +306,7 @@ void melhores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int 
         cout << "Melhores jogadores da posicao " << posicao << ":" << endl;
         for (int i = 0; i < n; i++) {
         cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
-        << jogadores[i].liga << " " << 
+        << jogadores[i].liga << " " <<
          jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
         }
     }
@@ -338,7 +338,7 @@ void piores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n)
         cout << "Piores jogadores da posicao " << posicao << ":" << endl;
         for (int i = 0; i < n; i++) {
         cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
-        << jogadores[i].liga << " " << 
+        << jogadores[i].liga << " " <<
          jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
         }
     }
@@ -374,12 +374,13 @@ void handleTagQuery(const vector<string>& tags, TagsTrieNode* tags_tst, vector<v
         getAllMatchingIDsTags(tags_tst, tag, tempIdList);
         if(idList.empty()) {
             idList.assign(tempIdList.begin(), tempIdList.end());
+            tempIdList.clear();
         } else {
             //Intersection of tags (could be improved with a search algo)
             for (int i = 0; i < idList.size(); i++) {
                 bool found = false;
-                for (int j = 0; i < tempIdList.size(); j++) {
-                    if(idList[i] == tempIdList[j]) {
+                for (int j : tempIdList) {
+                    if(idList[i] == j) {
                         found = true;
                     }
                 }
@@ -419,8 +420,26 @@ int main()
 
         // Read each word from the stringstream
         string word;
+        string tempWord = "";
         while (iss >> word) {
-            words.push_back(word);
+            if(word[0] == '\'' && word.back() != '\'') {
+                tempWord = word;
+            } else if (word[0] != '\'' && word.back() == '\'') {
+                tempWord.erase(tempWord.begin());
+                word.pop_back();
+
+                word = tempWord + " " + word;
+                tempWord = "";
+                words.push_back(word);
+                continue;
+            } else {
+                if(word[0] == '\'' && word.back() == '\'') {
+                    word.erase(word.begin());
+                    word.pop_back();
+                }
+                tempWord = "";
+                words.push_back(word);
+            }
         }
 
         if(!words.empty()) {

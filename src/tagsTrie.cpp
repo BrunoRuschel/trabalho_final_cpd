@@ -6,7 +6,9 @@ TagsTrieNode* createNodeTags(char value, TagsTrieNode *left, TagsTrieNode *middl
     root->left = left;
     root->right = right;
     root->middle = middle;
-    root->ids.push_back(id);
+    if(id > 0) {
+        root->ids.push_back(id);
+    }
     return root;
 }
 
@@ -40,7 +42,11 @@ TagsTrieNode* putNodeTags(TagsTrieNode *treeRoot, const std::string &key, int cu
         if(find(ids.begin(), ids.end(), id) != ids.end()){
             return nonNullableRoot;
         }
-        nonNullableRoot->ids.push_back(id);
+        if(nonNullableRoot->ids.size() == 1 && nonNullableRoot->ids[0] == -1) {
+            nonNullableRoot->ids[0] = id;
+        } else {
+            nonNullableRoot->ids.push_back(id);
+        }
 
     }
     return nonNullableRoot;
