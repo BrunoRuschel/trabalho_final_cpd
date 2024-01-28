@@ -39,9 +39,13 @@ void insertionSort_dec(vector<JOGADOR> &players) {
 
         // Move elements of players[0..i-1] that are greater than key
         // to one position ahead of their current position
-        while (j >= 0 && (players[j].soma_ratings / players[j].count_ratings) < (key.soma_ratings / key.count_ratings)) {
+        float rating1 = players[j].count_ratings > 0 ? players[j].soma_ratings / players[j].count_ratings : 0;
+        float rating2 = key.count_ratings > 0 ? key.soma_ratings / key.count_ratings : 0;
+        while (j >= 0 && rating1 < rating2) {
+            rating1 = players[j].count_ratings > 0 ? players[j].soma_ratings / players[j].count_ratings : 0;
             players[j + 1] = players[j];
             j = j - 1;
+            rating1 = players[j].count_ratings > 0 ? players[j].soma_ratings / players[j].count_ratings : 0;
         }
         players[j + 1] = key;
     }
