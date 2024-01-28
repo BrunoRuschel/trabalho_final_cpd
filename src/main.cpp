@@ -302,13 +302,15 @@ void melhores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int 
     //ordena
     insertionSort_dec(jogadores);
 
+    vector<JOGADOR> jogs_rnk;
+
+    for (int i = 0; i < n; i++) {
+        jogs_rnk.push_back(jogadores[i]);
+    }
+
     if(achou){
-        cout << "Melhores jogadores da posicao " << posicao << ":" << endl;
-        for (int i = 0; i < n; i++) {
-        cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
-        << jogadores[i].liga << " " <<
-         jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
-        }
+        cout << "Mlhores jogadores da posicao " << posicao << ":" << endl;
+        printPlayerInfo(jogs_rnk);
     }
     else {
         cout << "nenhum jogador encontrado com a posicao " << posicao << endl;
@@ -334,13 +336,15 @@ void piores_da_posicao(const vector<vector<JOGADOR>> &tb, string posicao, int n)
     //ordena
     insertionSort_cresc(jogadores);
 
+    vector<JOGADOR> jogs_rnk;
+
+    for (int i = 0; i < n; i++) {
+        jogs_rnk.push_back(jogadores[i]);
+    }
+
     if(achou){
         cout << "Piores jogadores da posicao " << posicao << ":" << endl;
-        for (int i = 0; i < n; i++) {
-        cout << jogadores[i].id << " " << jogadores[i].short_name << " " << jogadores[i].long_name << " " << " " << jogadores[i].posicoes << " " << jogadores[i].nacionalidade << " " << jogadores[i].clube << " "
-        << jogadores[i].liga << " " <<
-         jogadores[i].soma_ratings / jogadores[i].count_ratings << " " << jogadores[i].count_ratings << endl;
-        }
+        printPlayerInfo(jogs_rnk);
     }
     else {
         cout << "nenhum jogador encontrado com a posicao " << posicao << endl;
