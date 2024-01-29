@@ -371,15 +371,22 @@ void handlePlayerQuery(TrieNode* treeRoot, vector<vector<JOGADOR>> &table, const
 void handleTagQuery(const vector<string>& tags, TagsTrieNode* tags_tst, vector<vector<JOGADOR>> &table) {
     vector<int> idList;
     vector<int> tempIdList;
+    bool firstIteration = true;
     for(string tag : tags) {
         tag.erase(std::remove(tag.begin(), tag.end(), '\''), tag.end());
         transform(tag.begin(), tag.end(), tag.begin(), ::toupper);
 
         getAllMatchingIDsTags(tags_tst, tag, tempIdList);
-        if(idList.empty()) {
+        if(firstIteration) {
+            firstIteration = false;
             idList.assign(tempIdList.begin(), tempIdList.end());
             tempIdList.clear();
         } else {
+            if(tempIdList.empty() || idList.empty()) {
+                idList.clear();
+                tempIdList.clear();
+                continue;
+            }
             //Intersection of tags (could be improved with a search algo)
             for (int i = 0; i < idList.size(); i++) {
                 bool found = false;
