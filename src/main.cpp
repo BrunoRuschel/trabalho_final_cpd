@@ -388,8 +388,12 @@ void handleTagQuery(const vector<string>& tags, TagsTrieNode* tags_tst, vector<v
                         found = true;
                     }
                 }
-                if(!found) idList.erase(idList.begin()+i);
+                if(!found){
+                    idList.erase(idList.begin()+i);
+                    i--;
+                }
             }
+            tempIdList.clear();
         }
     }
     vector<JOGADOR> playerList;
@@ -436,6 +440,8 @@ int main()
                 tempWord = "";
                 words.push_back(word);
                 continue;
+            } else if (word[0] != '\'' && word.back() != '\'' && !tempWord.empty()) {
+                tempWord += " " + word;
             } else {
                 if(word[0] == '\'' && word.back() == '\'') {
                     word.erase(word.begin());
