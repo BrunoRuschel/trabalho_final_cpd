@@ -1,9 +1,0 @@
-# depslib dependency file v1.0
-1703904456 source:c:\users\bruno\onedrive\Área de trabalho\tf_cpd\main.cpp
-	<iostream>
-	<iostream>
-	<vector>
-	<string>
-	<fstream>
-	<sstream>
-
