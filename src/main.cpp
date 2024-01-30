@@ -457,18 +457,19 @@ int main()
                 words.erase(words.begin());
                 handleTagQuery(words, tags_tst, tb);
             }
+
+            if (words[0] == "user" && words.size() == 2) {
+                int userId = stoi(words[1]);
+                jogadores_revisados(tb_user, tb, userId);
+            }
+
+            if (words[0] == "top" && words.size() == 3) {
+                int n = stoi(words[1]);
+                string posicao = words[2];
+                melhores_da_posicao(tb, posicao, n);
+            }
         }
     }
-
-    //JOGADOR jog;
-    //USER user;
-
-    //jog = busca(tb, 191043);
-    //user = busca_user(tb_user, 21872);
-
-    //cout << jog.soma_ratings / jog.count_ratings << endl;
-    //cout << user.jogadores_avaliados[0] << " " << user.notas[0] << endl;
-    //cout << user.jogadores_avaliados[1] << " " << user.notas[1] << endl;
 
     return 0;
 }
