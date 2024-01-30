@@ -468,6 +468,12 @@ int main()
                 string posicao = words[2];
                 melhores_da_posicao(tb, posicao, n);
             }
+
+            if (words[0] == "piores" && words.size() == 3) {
+                int n = stoi(words[1]);
+                string posicao = words[2];
+                piores_da_posicao(tb, posicao, n);
+            }
         }
     }
 
