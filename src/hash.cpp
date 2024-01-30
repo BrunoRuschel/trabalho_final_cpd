@@ -8,6 +8,7 @@
 #include "jogador_struct.h"
 #include "user_struct.h"
 #include "sortings.h"
+#include "tagsTrie.h"
 
 #define TAM 7993
 #define TAM_TB_USER  24999989 //10007
